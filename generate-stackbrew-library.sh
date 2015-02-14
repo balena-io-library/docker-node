@@ -10,7 +10,7 @@ cd "$(dirname "$(readlink -f "$BASH_SOURCE")")"
 
 versions=( */ )
 versions=( "${versions[@]%/}" )
-url='git://github.com/nghiant2710/docker-node'
+url='git://github.com/resin-io-library/docker-node'
 
 echo '# maintainer: Joyent Image Team <image-team@joyent.com> (@joyent)'
 echo '# maintainer: Trong Nghia Nguyen - resin.io <james@resin.io>'
