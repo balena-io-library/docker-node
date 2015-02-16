@@ -1,4 +1,4 @@
-FROM resin/rpi-raspbian:jessie
+FROM resin/rpi-builpack-deps:jessie
 
 ENV NODE_VERSION 0.11.5
 ENV NPM_VERSION 2.5.0
