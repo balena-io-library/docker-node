@@ -1,4 +1,4 @@
-FROM resin/rpi-builpack-deps:wheezy
+FROM resin/rpi-buildpack-deps:wheezy
 
 ENV NODE_VERSION 0.10.36
 ENV NPM_VERSION 2.5.0
