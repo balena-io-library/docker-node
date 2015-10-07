@@ -3,7 +3,7 @@ set -e
 
 declare -A aliases
 aliases=(
-	[0.12.2]='0 latest'
+	[0.12.7]='0 latest'
 )
 
 cd "$(dirname "$(readlink -f "$BASH_SOURCE")")"
@@ -30,11 +30,8 @@ for repo in "${repos[@]}"; do
 		versionAliases=( $fullVersion $version ${aliases[$fullVersion]} )
 
 		echo
-		for va in "${versionAliases[@]}"; do
-			echo "$va: ${url}@${commit} $repo/$version"
-		done
-	
-		for variant in onbuild slim wheezy; do
+
+		for variant in slim; do
 			commit="$(git log -1 --format='format:%H' -- "$repo/$version/$variant")"
 			echo
 			for va in "${versionAliases[@]}"; do
@@ -46,21 +43,5 @@ for repo in "${repos[@]}"; do
 				echo "$va: ${url}@${commit} $repo/$version/$variant"
 			done
 		done
-
-		# Only for armv7hf
-		if [ $repo == 'armv7hf' ]; then
-			variant='sid'
-			commit="$(git log -1 --format='format:%H' -- "$repo/$version/$variant")"
-			echo
-			for va in "${versionAliases[@]}"; do
-				if [ "$va" = 'latest' ]; then
-					va="$variant"
-				else
-					va="$va-$variant"
-				fi
-				echo "$va: ${url}@${commit} $repo/$version/$variant"
-			done
-		fi
-
 	done
 done
