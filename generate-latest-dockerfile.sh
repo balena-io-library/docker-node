@@ -1,7 +1,10 @@
 #!/bin/bash
 set -e
 
-repos='armv7hf rpi i386 amd64'
+# comparing version: http://stackoverflow.com/questions/16989598/bash-comparing-version-numbers
+function version_le() { test "$(echo "$@" | tr " " "\n" | sort -V | tail -n 1)" == "$1"; }
+
+repos='armv7hf rpi i386 amd64 armel'
 nodeVersions='0.10.40 0.12.7 4.0.0 4.2.4 5.3.0'
 resinUrl="http://resin-packages.s3.amazonaws.com/node/v\$NODE_VERSION/node-v\$NODE_VERSION-linux-#{TARGET_ARCH}.tar.gz"
 nodejsUrl="http://nodejs.org/dist/v\$NODE_VERSION/node-v\$NODE_VERSION-linux-#{TARGET_ARCH}.tar.gz"
@@ -28,12 +31,28 @@ for repo in $repos; do
 		target_arch='x64'
 		baseImage='amd64-debian'
 	;;
+	'armel')
+		binary_url=$resinUrl
+		target_arch='armel'
+		baseImage='armel-debian'
+	;;
 	esac
 	for nodeVersion in $nodeVersions; do
 		echo $nodeVersion
 		baseVersion=$(expr match "$nodeVersion" '\([0-9]*\.[0-9]*\)')
-		dockerfilePath=$repo/$baseVersion
 
+		if [ $target_arch == "armv7hf" ] || [ $target_arch == "armv6hf" ]; then
+			if version_le "$nodeVersion" "4"; then
+				binary_url=$nodejsUrl
+				if [ $target_arch == "armv6hf" ]; then
+					target_arch='armv6l'
+				else
+					target_arch='armv7l'
+				fi
+			fi
+		fi
+
+		dockerfilePath=$repo/$baseVersion
 		mkdir -p $dockerfilePath/slim
 			sed -e s~#{FROM}~resin/$baseImage:jessie~g \
 				-e s~#{BINARY_URL}~$binary_url~g \
