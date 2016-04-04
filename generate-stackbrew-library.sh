@@ -24,8 +24,8 @@ function generate_library(){
 	echo '# maintainer: Trong Nghia Nguyen - resin.io <james@resin.io>' >> $lib_name
 
 	for version in "${versions[@]}"; do
-		commit="$(git log -1 --format='format:%H' -- "$path/$version")"
-		fullVersion="$(grep -m1 'ENV NODE_VERSION ' "$path/$version/Dockerfile" | cut -d' ' -f3)"
+		commit="$(git log -1 --format='format:%H' -- "$path/$version/slim")"
+		fullVersion="$(grep -m1 'ENV NODE_VERSION ' "$path/$version/slim/Dockerfile" | cut -d' ' -f3)"
 		if [ $version == 'default' ]; then
 			versionAliases=( $fullVersion )
 		else
