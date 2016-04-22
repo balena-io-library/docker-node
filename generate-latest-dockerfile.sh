@@ -38,7 +38,7 @@ C4F0DFFF4E8C1A8236409D08E73BC641CC11F4C8 \
 done
 
 archs='armv7hf rpi i386 amd64 armel'
-nodeVersions='0.10.40 4.4.1 5.9.0'
+nodeVersions='0.10.44 4.4.2 5.10.0'
 resinUrl="http://resin-packages.s3.amazonaws.com/node/v\$NODE_VERSION/node-v\$NODE_VERSION-linux-#{TARGET_ARCH}.tar.gz"
 nodejsUrl="http://nodejs.org/dist/v\$NODE_VERSION/node-v\$NODE_VERSION-linux-#{TARGET_ARCH}.tar.gz"
 
