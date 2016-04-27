@@ -19,7 +19,7 @@ function generate_library(){
 	versions=( "${versions[@]%/}" )
 	cd -
 
-	url='git://github.com/resin-io-library/base-images'
+	url='git://github.com/resin-io-library/docker-node'
 	echo '# maintainer: Joyent Image Team <image-team@joyent.com> (@joyent)' > $lib_name
 	echo '# maintainer: Trong Nghia Nguyen - resin.io <james@resin.io>' >> $lib_name
 
@@ -47,7 +47,7 @@ function generate_library(){
 				else
 					va="$va-$variant"
 				fi
-				echo "$va: ${url}@${commit} $repo/$path/$version/$variant" >> $lib_name
+				echo "$va: ${url}@${commit} $path/$version/$variant" >> $lib_name
 			done
 		done
 	done
