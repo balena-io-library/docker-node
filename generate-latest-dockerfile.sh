@@ -37,6 +37,17 @@ C4F0DFFF4E8C1A8236409D08E73BC641CC11F4C8 \
 	gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
 done
 
+QEMU_VERSION='2.5.0-resin-rc3'
+QEMU_SHA256='dc36002fd3e362710e1654c4dfdc84a064b710e10a2323e8e4c8e24cb3921818'
+
+# Download QEMU
+curl -SLO https://github.com/resin-io/qemu/releases/download/$QEMU_VERSION/qemu-$QEMU_VERSION.tar.gz \
+	&& echo "$QEMU_SHA256  qemu-$QEMU_VERSION.tar.gz" > qemu-$QEMU_VERSION.tar.gz.sha256sum \
+	&& sha256sum -c qemu-$QEMU_VERSION.tar.gz.sha256sum \
+	&& tar -xz --strip-components=1 -f qemu-$QEMU_VERSION.tar.gz
+
+chmod +x qemu-arm-static
+
 archs='armv7hf rpi i386 amd64 armel'
 nodeVersions='0.10.44 4.4.2 5.10.0 6.2.0'
 resinUrl="http://resin-packages.s3.amazonaws.com/node/v\$NODE_VERSION/node-v\$NODE_VERSION-linux-#{TARGET_ARCH}.tar.gz"
@@ -73,7 +84,9 @@ for arch in $archs; do
 		esac
 
 		baseVersion=$(expr match "$nodeVersion" '\([0-9]*\.[0-9]*\)')
-
+		if [ $arch == "armel" ] && [ $nodeVersion == "6.2.0" ]; then
+			continue
+		fi
 		# Debian.
 		# For armv7hf and armv6hf, if node version is greater or equal than 4.x.x then that image will use binaries from official distribution, otherwise it will use binaries from resin.
 		if [ $binary_arch == "armv7hf" ] || [ $binary_arch == "armv6hf" ]; then
@@ -107,12 +120,16 @@ for arch in $archs; do
 		'x64')
 			binary_arch='alpine-amd64'
 			binary_url=$resinUrl
-			baseImage='amd64-alpine'
+			baseImage='alpine'
+			label="LABEL io.resin.architecture=\"amd64\""
+			qemu=''
 		;;
 		'x86')
 			binary_arch='alpine-i386'
 			binary_url=$resinUrl
-			baseImage='i386-alpine'
+			baseImage='i386/alpine'
+			label="LABEL io.resin.architecture=\"i386\""
+			qemu=''
 		;;
 		'armel')
 			# armel not supported yet.
@@ -121,7 +138,9 @@ for arch in $archs; do
 		*)
 			binary_arch='alpine-armhf'
 			binary_url=$resinUrl
-			baseImage='armhf-alpine'
+			baseImage='armhf/alpine'
+			label="LABEL io.resin.architecture=\"armhf\" io.resin.qemu.version=\"$QEMU_VERSION\""
+			qemu='COPY qemu-arm-static /usr/bin/qemu-arm-static'
 		;;
 		esac
 
@@ -133,10 +152,17 @@ for arch in $archs; do
 
 		alpine_dockerfilePath=$arch/alpine/$baseVersion
 		mkdir -p $alpine_dockerfilePath/slim
-		sed -e s~#{FROM}~resin/$baseImage:latest~g \
+		sed -e s~#{FROM}~$baseImage:latest~g \
 			-e s~#{BINARY_URL}~$binary_url~g \
 			-e s~#{NODE_VERSION}~$nodeVersion~g \
 			-e s~#{CHECKSUM}~"$checksum"~g \
-			-e s~#{TARGET_ARCH}~$binary_arch~g Dockerfile.alpine.slim.tpl > $alpine_dockerfilePath/slim/Dockerfile
+			-e s~#{TARGET_ARCH}~$binary_arch~g \
+			-e s~#{LABEL}~"$label"~g \
+			-e s~#{QEMU}~"$qemu"~g Dockerfile.alpine.slim.tpl > $alpine_dockerfilePath/slim/Dockerfile
+
+		if [ $binary_arch == "alpine-armhf" ]; then
+			cp qemu-arm-static $alpine_dockerfilePath/slim/
+		fi
 	done
 done
+rm -rf qemu-*
