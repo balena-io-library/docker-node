@@ -5,7 +5,7 @@ LABEL io.resin.architecture="amd64"
 
 
 
-ENV NODE_VERSION 6.2.2
+ENV NODE_VERSION 5.12.0
 
 # Install dependencies
 RUN apk add --no-cache libgcc libstdc++
@@ -14,7 +14,7 @@ RUN buildDeps='curl ca-certificates tar binutils' \
 	&& set -x \
 	&& apk add --no-cache $buildDeps \
 	&& curl -SLO "http://resin-packages.s3.amazonaws.com/node/v$NODE_VERSION/node-v$NODE_VERSION-linux-alpine-amd64.tar.gz" \
-	&& echo "c2e6d71de993a5ea4ecb07a3ecd7e0a4b454f44f52409698cb0d6a45220c7d68  node-v6.2.2-linux-alpine-amd64.tar.gz" | sha256sum -c - \
+	&& echo "898ce95ba34bbb1e2b065e201b5d21af5bc49776ae8c4962db3f80b1ef782ae4  node-v5.12.0-linux-alpine-amd64.tar.gz" | sha256sum -c - \
 	&& tar -xzf "node-v$NODE_VERSION-linux-alpine-amd64.tar.gz" -C /usr/local --strip-components=1 \
 	&& rm "node-v$NODE_VERSION-linux-alpine-amd64.tar.gz" \
 	&& strip --strip-unneeded /usr/local/bin/node \

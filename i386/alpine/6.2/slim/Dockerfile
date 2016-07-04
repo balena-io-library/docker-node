@@ -5,7 +5,7 @@ LABEL io.resin.architecture="i386"
 
 
 
-ENV NODE_VERSION 6.2.0
+ENV NODE_VERSION 6.2.2
 
 # Install dependencies
 RUN apk add --no-cache libgcc libstdc++
@@ -14,7 +14,7 @@ RUN buildDeps='curl ca-certificates tar binutils' \
 	&& set -x \
 	&& apk add --no-cache $buildDeps \
 	&& curl -SLO "http://resin-packages.s3.amazonaws.com/node/v$NODE_VERSION/node-v$NODE_VERSION-linux-alpine-i386.tar.gz" \
-	&& echo "de633797333c7417db7eed7f057f43fdd4dadb3aa662081f9b0455f28aa4474c  node-v6.2.0-linux-alpine-i386.tar.gz" | sha256sum -c - \
+	&& echo "67b72550ee80befe4cd884d0f16caed8869dc7367edb7f01b76bad4992b6125e  node-v6.2.2-linux-alpine-i386.tar.gz" | sha256sum -c - \
 	&& tar -xzf "node-v$NODE_VERSION-linux-alpine-i386.tar.gz" -C /usr/local --strip-components=1 \
 	&& rm "node-v$NODE_VERSION-linux-alpine-i386.tar.gz" \
 	&& strip --strip-unneeded /usr/local/bin/node \
