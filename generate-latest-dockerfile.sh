@@ -49,7 +49,7 @@ curl -SLO https://github.com/resin-io/qemu/releases/download/$QEMU_VERSION/qemu-
 chmod +x qemu-arm-static
 
 archs='armv7hf rpi i386 amd64 armel'
-nodeVersions='0.10.44 4.4.2 5.10.0 6.2.0'
+nodeVersions='0.10.46 4.4.7 5.12.0 6.2.2'
 resinUrl="http://resin-packages.s3.amazonaws.com/node/v\$NODE_VERSION/node-v\$NODE_VERSION-linux-#{TARGET_ARCH}.tar.gz"
 nodejsUrl="http://nodejs.org/dist/v\$NODE_VERSION/node-v\$NODE_VERSION-linux-#{TARGET_ARCH}.tar.gz"
 

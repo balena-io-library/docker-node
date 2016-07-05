@@ -14,6 +14,16 @@ function generate_library(){
 	fi
 	path="$1/$2"
 
+	# Don't export rpi-alpine-node library
+	if [ $1 == 'rpi' ] && [ $2 == 'alpine' ]; then
+		continue
+	fi
+
+	# Export armhf-alpine-node instead of armv7hf-alpine-node
+	if [ $1 == 'armv7hf' ] && [ $2 == 'alpine' ]; then
+		lib_name="armhf-alpine-node"
+	fi
+
 	cd $path
 	versions=( */ )
 	versions=( "${versions[@]%/}" )
@@ -30,10 +40,6 @@ function generate_library(){
 			versionAliases=( $fullVersion )
 		else
 			versionAliases=( $fullVersion $version ${aliases[$fullVersion]} )
-		fi
-
-		if [ $1 == 'raspberrypi' ] && [ $2 == 'debian' ] && [ $version == '0.12' ]; then
-			continue
 		fi
 
 		echo >> $lib_name
@@ -55,7 +61,7 @@ function generate_library(){
 
 declare -A aliases
 aliases=(
-	[6.2.0]='6 latest'
+	[6.2.2]='6 latest'
 )
 
 defaultVersion='0.10.22'
