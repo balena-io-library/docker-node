@@ -5,7 +5,7 @@ LABEL io.resin.architecture="armhf" io.resin.qemu.version="2.5.0-resin-rc3"
 
 COPY qemu-arm-static /usr/bin/qemu-arm-static
 
-ENV NODE_VERSION 6.3.0
+ENV NODE_VERSION 6.5.0
 
 # Install dependencies
 RUN apk add --no-cache libgcc libstdc++
@@ -14,7 +14,7 @@ RUN buildDeps='curl ca-certificates tar binutils' \
 	&& set -x \
 	&& apk add --no-cache $buildDeps \
 	&& curl -SLO "http://resin-packages.s3.amazonaws.com/node/v$NODE_VERSION/node-v$NODE_VERSION-linux-alpine-armhf.tar.gz" \
-	&& echo "fd8caaf8a6b174c850f177468940e08dd215a68fd21a9c0557025c8b744541c9  node-v6.3.0-linux-alpine-armhf.tar.gz" | sha256sum -c - \
+	&& echo "698580b8476ececb89758bda979d7dadb61f0c50d83f2db25a4857b2773634bc  node-v6.5.0-linux-alpine-armhf.tar.gz" | sha256sum -c - \
 	&& tar -xzf "node-v$NODE_VERSION-linux-alpine-armhf.tar.gz" -C /usr/local --strip-components=1 \
 	&& rm "node-v$NODE_VERSION-linux-alpine-armhf.tar.gz" \
 	&& strip --strip-unneeded /usr/local/bin/node \
